@@ -5,6 +5,28 @@ Description: ""
 Resources:
   OutputLogS3Bucket:
     Type: "AWS::S3::Bucket"
+  
+  CodeBuildPolicy:
+    Properties:
+      PolicyDocument:
+        Statement:
+        - Action:
+          - s3:PutObject
+          Effect: Allow
+          Resource: !GetAtt 'OutputLogS3Bucket.Arn'
+        - Action:
+          - logs:CreateLogGroup
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+          Effect: Allow
+          Resource: '*'
+      PolicyName: !Join
+        - '-'
+        -  - !Ref 'AWS::StackName'
+           - CodeBuildPolicy
+      Roles:
+      - !Ref 'CodeBuildRole'
+    Type: AWS::IAM::Policy
 
   CodeBuildRole:
     Properties:
@@ -22,6 +44,8 @@ Resources:
     Type: AWS::IAM::Role
 
   CodeBuildProject:
+    DependsOn:
+    - CodeBuildPolicy
     Type: "AWS::CodeBuild::Project"
     Properties:
       Source: 

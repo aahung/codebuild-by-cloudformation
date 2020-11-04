@@ -53,12 +53,6 @@ Resources:
       TimeoutInMinutes: 60
       QueuedTimeoutInMinutes: 480
       BadgeEnabled: true
-      LogsConfig: 
-        CloudWatchLogs: 
-          Status: "DISABLED"
-        S3Logs: 
-          Status: "DISABLED"
-          EncryptionDisabled: true
       Triggers:
         Webhook: true
         FilterGroups:

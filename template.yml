@@ -57,7 +57,7 @@ Resources:
         ReportBuildStatus: true
         Type: "GITHUB"
       Artifacts: 
-        EncryptionDisabled: false
+        EncryptionDisabled: true
         Location: !Ref OutputLogS3Bucket
         Name: "codebuild-by-cloudformation"
         NamespaceType: "NONE"

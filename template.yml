@@ -56,7 +56,7 @@ Resources:
       BadgeEnabled: true
       LogsConfig: 
         CloudWatchLogs: 
-          Status: "ENABLED"
+          Status: "DISABLED"
         S3Logs: 
           Status: "DISABLED"
           EncryptionDisabled: false

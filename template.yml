@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Metadata:
+  Generator: "former2"
+Description: ""
+Resources:
+  OutputLogS3Bucket:
+    Type: "AWS::S3::Bucket"
+
+  CodeBuildRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: codebuild.amazonaws.com
+      Path: /
+      RoleName: !Join
+      - '-'
+      - - !Ref 'AWS::StackName'
+        - CodeBuild
+    Type: AWS::IAM::Role
+
+  CodeBuildProject:
+    Type: "AWS::CodeBuild::Project"
+    Properties:
+      Source: 
+        GitCloneDepth: 1
+        GitSubmodulesConfig: 
+          FetchSubmodules: false
+        InsecureSsl: false
+        Location: "https://github.com/aahung/codebuild-by-cloudformation.git"
+        ReportBuildStatus: true
+        Type: "GITHUB"
+      Artifacts: 
+        EncryptionDisabled: false
+        Location: !Ref OutputLogS3Bucket
+        Name: "codebuild-by-cloudformation"
+        NamespaceType: "NONE"
+        OverrideArtifactName: false
+        Packaging: "NONE"
+        Path: ""
+        Type: "S3"
+      Cache: 
+        Type: "NO_CACHE"
+      Environment: 
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        ImagePullCredentialsType: "CODEBUILD"
+        PrivilegedMode: true
+        Type: "LINUX_CONTAINER"
+      ServiceRole: !Ref CodeBuildRole
+      TimeoutInMinutes: 60
+      QueuedTimeoutInMinutes: 480
+      EncryptionKey: !Sub "arn:aws:kms:${AWS::Region}:${AWS::AccountId}:alias/aws/s3"
+      BadgeEnabled: true
+      LogsConfig: 
+        CloudWatchLogs: 
+          Status: "ENABLED"
+        S3Logs: 
+          Status: "DISABLED"
+          EncryptionDisabled: false
+      Triggers:
+        Webhook: true
+        FilterGroups:
+          - - Type: EVENT
+              Pattern: PULL_REQUEST_CREATED,PULL_REQUEST_UPDATED
+            - Type: BASE_REF
+              Pattern: ^refs/heads/main$
+              ExcludeMatchedPattern: false
+          - - Type: EVENT
+              Pattern: PUSH
+            - Type: HEAD_REF
+              Pattern: ^refs/heads/.*

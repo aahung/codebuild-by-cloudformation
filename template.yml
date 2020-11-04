@@ -11,9 +11,14 @@ Resources:
       PolicyDocument:
         Statement:
         - Action:
-          - s3:*
+          - s3:GetBucketAcl
+          - s3:GetBucketLocation
           Effect: Allow
           Resource: !GetAtt 'OutputLogS3Bucket.Arn'
+        - Action:
+          - s3:PutObject
+          Effect: Allow
+          Resource: !Sub '${OutputLogS3Bucket.Arn}/*'
         - Action:
           - logs:CreateLogGroup
           - logs:CreateLogStream

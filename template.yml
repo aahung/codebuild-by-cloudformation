@@ -59,7 +59,7 @@ Resources:
           Status: "DISABLED"
         S3Logs: 
           Status: "DISABLED"
-          EncryptionDisabled: false
+          EncryptionDisabled: true
       Triggers:
         Webhook: true
         FilterGroups:

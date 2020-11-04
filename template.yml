@@ -64,11 +64,11 @@ Resources:
       Artifacts: 
         EncryptionDisabled: true
         Location: !Ref OutputLogS3Bucket
-        Name: "codebuild-by-cloudformation"
-        NamespaceType: "NONE"
+        Name: "/"
+        NamespaceType: "BUILD_ID"
         OverrideArtifactName: false
         Packaging: "NONE"
-        Path: ""
+        Path: "artifacts"
         Type: "S3"
       Cache: 
         Type: "NO_CACHE"
